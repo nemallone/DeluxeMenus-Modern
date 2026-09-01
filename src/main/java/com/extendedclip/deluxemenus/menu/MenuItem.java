@@ -244,6 +244,8 @@ public class MenuItem {
             }
         }
 
+        applyMaxStackSize(itemStack, holder);
+
         int maxStackSize = itemStack.getMaxStackSize();
         if (amount > maxStackSize) {
             amount = maxStackSize;
@@ -575,6 +577,40 @@ public class MenuItem {
         }
 
         return itemStack;
+    }
+
+    private void applyMaxStackSize(@NotNull final ItemStack itemStack, @NotNull final MenuHolder holder) {
+        if (!VersionHelper.HAS_DATA_COMPONENTS || this.options.maxStackSize().isEmpty()) {
+            return;
+        }
+
+        final int maxStackSize = this.options.maxStackSize().get();
+        final ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) {
+            return;
+        }
+
+        if (maxStackSize > 1 && hasMaxDamage(itemStack, itemMeta)) {
+            plugin.debug(DebugLevel.HIGHEST, Level.WARNING, "Cannot apply max_stack_size " + maxStackSize + " to item in slot " + this.options.slot() + " of menu: " + holder.getMenuName() + ". Items with max damage cannot have a max stack size greater than 1. Ignoring the option.");
+            return;
+        }
+
+        try {
+            itemMeta.setMaxStackSize(maxStackSize);
+            if (itemStack.setItemMeta(itemMeta)) {
+                return;
+            }
+        } catch (final IllegalArgumentException ignored) {
+        }
+
+        plugin.debug(DebugLevel.HIGHEST, Level.WARNING, "Could not apply max_stack_size " + maxStackSize + " to item in slot " + this.options.slot() + " of menu: " + holder.getMenuName() + ". Ignoring the option.");
+    }
+
+    private boolean hasMaxDamage(@NotNull final ItemStack itemStack, @NotNull final ItemMeta itemMeta) {
+        if (itemStack.getType().getMaxDurability() > 0) {
+            return true;
+        }
+        return itemMeta instanceof Damageable && ((Damageable) itemMeta).hasMaxDamage();
     }
 
     /**

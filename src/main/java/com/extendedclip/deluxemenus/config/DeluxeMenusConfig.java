@@ -50,6 +50,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -617,6 +618,7 @@ public class DeluxeMenusConfig {
                             .orElse(null))
                     .slot(c.getInt(currentPath + "slot", 0))
                     .amount(c.getInt(currentPath + "amount", -1))
+                    .maxStackSize(parseMaxStackSize(c, currentPath, key, name))
                     .dynamicAmount(c.getString(currentPath + "dynamic_amount", null))
                     .customModelData(c.getString(currentPath + "model_data", null))
                     .lightLevel(c.getString(currentPath + "light_level", null))
@@ -843,6 +845,31 @@ public class DeluxeMenusConfig {
             }
         }
         return menuItems;
+    }
+
+    private @Nullable Integer parseMaxStackSize(
+            final @NotNull FileConfiguration config,
+            final @NotNull String currentPath,
+            final @NotNull String itemKey,
+            final @NotNull String menuName
+    ) {
+        final String optionPath = currentPath + "max_stack_size";
+        if (!config.contains(optionPath)) {
+            return null;
+        }
+
+        final int maxStackSize = config.getInt(optionPath);
+        if (!config.isInt(optionPath) || maxStackSize < 1 || maxStackSize > 99) {
+            plugin.debug(DebugLevel.HIGHEST, Level.WARNING, "Found invalid value for 'max_stack_size' option for item: " + itemKey + " in menu: " + menuName + ". Expected an integer from 1 to 99. Ignoring the invalid value.");
+            return null;
+        }
+
+        if (!VersionHelper.HAS_DATA_COMPONENTS) {
+            plugin.debug(DebugLevel.HIGHEST, Level.WARNING, "The 'max_stack_size' option for item: " + itemKey + " in menu: " + menuName + " is not supported on this server version. Ignoring the option.");
+            return null;
+        }
+
+        return maxStackSize;
     }
 
     private RequirementList getRequirements(FileConfiguration c, String path) {

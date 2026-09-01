@@ -312,6 +312,9 @@ public class MenuHolder implements InventoryHolder {
                         }
 
                         i.setItemMeta(meta);
+                        if (item.options().maxStackSize().isPresent()) {
+                            amt = Math.min(amt, i.getMaxStackSize());
+                        }
                         i.setAmount(amt);
                     }
                 }

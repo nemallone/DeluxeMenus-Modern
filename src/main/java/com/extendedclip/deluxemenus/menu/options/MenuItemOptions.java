@@ -24,6 +24,7 @@ public class MenuItemOptions {
     private final String material;
     private final String damage;
     private final int amount;
+    private final Integer maxStackSize;
     private final String customModelData;
     private final CustomModelDataComponent customModelDataComponent;
     private final String dynamicAmount;
@@ -88,6 +89,7 @@ public class MenuItemOptions {
         this.material = builder.material;
         this.damage = builder.damage;
         this.amount = builder.amount;
+        this.maxStackSize = builder.maxStackSize;
         this.customModelData = builder.customModelData;
         this.customModelDataComponent = builder.customModelDataComponent;
         this.dynamicAmount = builder.dynamicAmount;
@@ -154,6 +156,10 @@ public class MenuItemOptions {
 
     public int amount() {
         return amount;
+    }
+
+    public @NotNull Optional<Integer> maxStackSize() {
+        return Optional.ofNullable(maxStackSize);
     }
 
     public @NotNull Optional<String> customModelData() {
@@ -365,6 +371,7 @@ public class MenuItemOptions {
                 .material(this.material)
                 .damage(this.damage)
                 .amount(this.amount)
+                .maxStackSize(this.maxStackSize)
                 .customModelData(this.customModelData)
                 .customModelDataComponent(this.customModelDataComponent)
                 .dynamicAmount(this.dynamicAmount)
@@ -420,6 +427,7 @@ public class MenuItemOptions {
         private String material;
         private String damage;
         private int amount;
+        private Integer maxStackSize;
         private String customModelData;
         private CustomModelDataComponent customModelDataComponent;
         private String dynamicAmount;
@@ -495,6 +503,11 @@ public class MenuItemOptions {
 
         public MenuItemOptionsBuilder amount(final int configAmount) {
             this.amount = configAmount;
+            return this;
+        }
+
+        public MenuItemOptionsBuilder maxStackSize(final @Nullable Integer maxStackSize) {
+            this.maxStackSize = maxStackSize;
             return this;
         }
 
