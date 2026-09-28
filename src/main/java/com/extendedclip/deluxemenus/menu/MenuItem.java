@@ -502,7 +502,9 @@ public class MenuItem {
             for (final ItemFlag flag : this.options.itemFlags()) {
                 itemMeta.addItemFlags(flag);
 
-                if (flag == ItemFlag.HIDE_ATTRIBUTES && VersionHelper.HAS_DATA_COMPONENTS) {
+                if (flag == ItemFlag.HIDE_ATTRIBUTES
+                        && VersionHelper.HAS_DATA_COMPONENTS
+                        && !VersionHelper.HAS_TOOLTIP_DISPLAY_COMPONENT) {
                     itemMeta.setAttributeModifiers(ImmutableMultimap.of());
                 }
             }
@@ -574,6 +576,10 @@ public class MenuItem {
                     itemStack = NbtProvider.setInt(itemStack, parts[0], Integer.parseInt(parts[1]));
                 }
             }
+        }
+
+        if (VersionHelper.HAS_TOOLTIP_DISPLAY_COMPONENT) {
+            TooltipDisplayCompat.apply(itemStack, this.options.itemFlags());
         }
 
         return itemStack;

@@ -2,7 +2,7 @@
 craftEngine = "26.7.4"
 
 [libraries]
-paper-1-21 = { module = "io.papermc.paper:paper-api", version = "1.21.4-R0.1-SNAPSHOT" }
+paper-1-21 = { module = "io.papermc.paper:paper-api", version = "1.21.11-R0.1-SNAPSHOT" }
 paper-1-18 = { module = "io.papermc.paper:paper-api", version = "1.18.2-R0.1-SNAPSHOT" }
 paper-1-16 = { module = "com.destroystokyo.paper:paper-api", version = "1.16.5-R0.1-SNAPSHOT" }
 
